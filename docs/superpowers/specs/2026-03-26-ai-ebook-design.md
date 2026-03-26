@@ -65,8 +65,8 @@ Each chapter includes:
 
 | Deliverable | Format | Purpose |
 |---|---|---|
-| Master manuscript | DOCX | Editable source file with proper headings, styles, and page breaks |
-| Kindle-ready manuscript | DOCX (formatted for KDP conversion) | User uploads to KDP, which converts to Kindle format; alternatively user converts via Calibre |
+| Master manuscript | Markdown (structured) | Claude writes the full manuscript as formatted Markdown with heading levels, bold/italic, and link syntax. User converts to DOCX via Pandoc (`pandoc manuscript.md -o manuscript.docx`) or pastes into a Word/Google Docs template. A conversion guide will be provided. |
+| Kindle-ready version | (same DOCX from above) | User uploads the DOCX to KDP, which converts to Kindle format; alternatively user converts via Calibre |
 | Direct-sale version | PDF | Styled PDF for Gumroad buyers |
 | Book description | Text | Amazon listing copy + Gumroad sales page copy |
 | Author bio | Text | Short and long versions |
@@ -100,7 +100,7 @@ Gumroad premium is justified by the direct relationship + email bonus content. A
 
 - The 70% KDP royalty tier requires the book to be priced between $2.99 and $9.99.
 - **Important:** If selling on both KDP and Gumroad, do NOT enroll in KDP Select (which requires exclusivity). Sell as a standard KDP listing.
-- **Gumroad discount codes must not reduce the price below ~$4.00.** Amazon's price-matching policy can automatically lower your KDP price to match the lowest price found elsewhere. If a Gumroad coupon drops the effective price too low, it could trigger a KDP price match or remove 70% royalty eligibility.
+- **Do not use public Gumroad discount codes that reduce the effective price below your KDP list price ($4.99).** Amazon's price-matching policy can automatically lower your KDP price to match the lowest publicly discoverable price. Gumroad's public discount pages are indexable by search engines, so assume any public coupon is visible to KDP's crawlers. Private/direct-link discount codes carry less risk but caution is still advised.
 
 ### ISBN
 
@@ -155,7 +155,7 @@ Gumroad premium is justified by the direct relationship + email bonus content. A
 12. Design cover in Canva
 13. Upload DOCX + cover to KDP (KDP converts to Kindle format), publish
 14. Upload PDF to Gumroad, paste in sales page copy
-15. Set up email sequence using Gumroad's built-in post-purchase email workflow (recommended — simplest for a 3-email sequence). ConvertKit is an alternative but requires a paid Creator plan ($29/mo) for automated sequences; the free tier only supports broadcasts.
+15. Set up email sequence using Mailchimp free tier (recommended — supports automated drip sequences for up to 500 contacts). Gumroad's built-in email only supports a single post-purchase message, not a timed multi-email drip. ConvertKit is another alternative but requires a paid Creator plan ($29/mo) for automated sequences.
 16. Launch
 
 ### Phase 4 — Post-Launch (Collaborative)
@@ -168,7 +168,7 @@ Gumroad premium is justified by the direct relationship + email bonus content. A
 - Claude cannot create accounts on platforms on the user's behalf
 - Claude cannot upload files to Amazon/Gumroad — step-by-step guides will be provided instead
 - Cover design is the user's responsibility — a detailed Canva brief will be provided
-- Recommended email platform is Gumroad's built-in workflow (simplest). ConvertKit automated sequences require a paid plan ($29/mo); free tier only supports broadcasts.
+- Recommended email platform for the 3-email drip sequence is Mailchimp free tier (supports automations for up to 500 contacts). Gumroad's built-in email only supports a single post-purchase message. ConvertKit automated sequences require a paid plan ($29/mo).
 
 ## Estimated Timeline
 
