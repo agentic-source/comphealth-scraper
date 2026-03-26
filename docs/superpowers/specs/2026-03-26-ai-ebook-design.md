@@ -15,7 +15,22 @@ Conversational and friendly. Like a knowledgeable friend explaining things over 
 ## Book Details
 
 - **Length:** ~25,000–35,000 words (~100–140 pages)
-- **Format:** DOCX (master), EPUB (Kindle), PDF (Gumroad)
+- **Format:** DOCX (master), PDF (Gumroad). User converts DOCX to EPUB for Kindle via KDP's built-in converter or Calibre (free tool) — see Phase 3.
+
+## Front & Back Matter
+
+The book includes standard front and back matter required for a professional e-book:
+
+**Front matter:**
+- Title page
+- Copyright page (year, author name, "All rights reserved," standard disclaimer)
+- Legal disclaimer (especially for career advice in Ch. 7 and privacy/safety guidance in Ch. 11 — this is informational content, not professional advice)
+- Table of contents (hyperlinked — required by KDP quality standards)
+
+**Back matter:**
+- About the Author (using the author bio deliverable)
+- Resources & Links (compiled from all "Try This Now" exercises)
+- "Also By" / "What's Next" page (placeholder for future works)
 
 ## Chapter Outline
 
@@ -51,7 +66,7 @@ Each chapter includes:
 | Deliverable | Format | Purpose |
 |---|---|---|
 | Master manuscript | DOCX | Editable source file with proper headings, styles, and page breaks |
-| Kindle version | EPUB | For Amazon KDP upload |
+| Kindle-ready manuscript | DOCX (formatted for KDP conversion) | User uploads to KDP, which converts to Kindle format; alternatively user converts via Calibre |
 | Direct-sale version | PDF | Styled PDF for Gumroad buyers |
 | Book description | Text | Amazon listing copy + Gumroad sales page copy |
 | Author bio | Text | Short and long versions |
@@ -74,12 +89,24 @@ Each chapter includes:
 
 | Platform | Price | Creator Take | Buyer Gets |
 |----------|-------|-------------|------------|
-| Amazon KDP | $4.99 | ~$3.49 (70% royalty) | EPUB on Kindle |
-| Gumroad | $9.99 | ~$8.99 (90% after 10% fee) | PDF + 3-email bonus series |
+| Amazon KDP | $4.99 | ~$3.49 (70% royalty) | Kindle e-book |
+| Gumroad | $9.99 | ~$8.40 (after 10% Gumroad fee + ~2.9%+$0.30 payment processing) | PDF + 3-email bonus series |
 
 ### Why two price points
 
 Gumroad premium is justified by the direct relationship + email bonus content. Amazon's lower price is the impulse-buy entry point with massive discoverability. Gumroad discount codes can be used for launch week to drive early sales.
+
+### KDP Royalty & Pricing Notes
+
+- The 70% KDP royalty tier requires the book to be priced between $2.99 and $9.99.
+- **Important:** If selling on both KDP and Gumroad, do NOT enroll in KDP Select (which requires exclusivity). Sell as a standard KDP listing.
+- **Gumroad discount codes must not reduce the price below ~$4.00.** Amazon's price-matching policy can automatically lower your KDP price to match the lowest price found elsewhere. If a Gumroad coupon drops the effective price too low, it could trigger a KDP price match or remove 70% royalty eligibility.
+
+### ISBN
+
+- For Kindle-only e-books on KDP, an ISBN is **not required** — Amazon assigns a free ASIN automatically.
+- If you later want a print-on-demand edition or to list on other platforms, you would need an ISBN. The KDP setup guide will explain how to handle the ISBN prompt during upload.
+- Gumroad does not require an ISBN for digital products.
 
 ## Amazon KDP Listing Assets
 
@@ -110,8 +137,8 @@ Gumroad premium is justified by the direct relationship + email bonus content. A
 
 1. Write full 12-chapter manuscript in DOCX
 2. Include all exercises, sidebars, and chapter summaries
-3. Generate EPUB version for Kindle
-4. Generate styled PDF for Gumroad
+3. Generate styled PDF for Gumroad
+4. Provide DOCX formatted for clean KDP conversion (proper heading styles, page breaks, hyperlinked TOC)
 
 ### Phase 2 — Marketing Assets (Claude)
 
@@ -126,9 +153,9 @@ Gumroad premium is justified by the direct relationship + email bonus content. A
 10. Create Amazon KDP account
 11. Create Gumroad account
 12. Design cover in Canva
-13. Upload EPUB + cover to KDP, publish
+13. Upload DOCX + cover to KDP (KDP converts to Kindle format), publish
 14. Upload PDF to Gumroad, paste in sales page copy
-15. Set up email sequence in Gumroad or ConvertKit free tier
+15. Set up email sequence using Gumroad's built-in post-purchase email workflow (recommended — simplest for a 3-email sequence). ConvertKit is an alternative but requires a paid Creator plan ($29/mo) for automated sequences; the free tier only supports broadcasts.
 16. Launch
 
 ### Phase 4 — Post-Launch (Collaborative)
@@ -141,4 +168,13 @@ Gumroad premium is justified by the direct relationship + email bonus content. A
 - Claude cannot create accounts on platforms on the user's behalf
 - Claude cannot upload files to Amazon/Gumroad — step-by-step guides will be provided instead
 - Cover design is the user's responsibility — a detailed Canva brief will be provided
-- The email sequence uses Gumroad's built-in email or ConvertKit's free tier (up to 1,000 subscribers)
+- Recommended email platform is Gumroad's built-in workflow (simplest). ConvertKit automated sequences require a paid plan ($29/mo); free tier only supports broadcasts.
+
+## Estimated Timeline
+
+| Phase | Estimated Duration | Notes |
+|-------|-------------------|-------|
+| Phase 1 — Content | ~1–2 weeks | Multiple writing sessions; largest effort |
+| Phase 2 — Marketing | ~1 session | Quick once the book is complete |
+| Phase 3 — Platform Setup | ~2–4 hours of user time | Following step-by-step guides |
+| Phase 4 — Post-Launch | Ongoing | As reviews come in and data accumulates |
