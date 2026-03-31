@@ -21,6 +21,7 @@ JOBS_NEW_FILE = Path(__file__).parent / "jobs_new.json"
 BASE_URL = "https://www.comphealth.com"
 JOBS_URL = f"{BASE_URL}/jobs?datePosted=today&sort=newest"
 MIN_TOTAL_JOBS = 100
+MAX_PAGES = 30  # Cap at 750 jobs per run (30 pages × 25 jobs)
 USER_AGENT = (
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
     "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36"
@@ -121,13 +122,17 @@ async def _text(locator) -> str:
         return ""
 
 
-async def scrape_all_jobs() -> tuple[list, bool]:
+async def scrape_all_jobs(seen_ids: set) -> tuple[list, bool]:
     """
-    Scrape all jobs posted today.
-    Returns (jobs, is_complete) where is_complete=False means pagination
-    failed mid-way (partial results are still valid and should be saved).
+    Scrape jobs posted today up to MAX_PAGES pages.
+
+    Stops early when an entire page's IDs are all already in seen_ids
+    (efficient on day 2+ once state is established).
+
+    Returns (new_jobs, is_complete) where is_complete=False means we hit
+    MAX_PAGES or a pagination error before finding the "all seen" stopping point.
     """
-    jobs = []
+    new_jobs = []
     is_complete = True
 
     async with async_playwright() as p:
@@ -138,7 +143,7 @@ async def scrape_all_jobs() -> tuple[list, bool]:
             await page.goto(JOBS_URL, wait_until="domcontentloaded", timeout=60000)
             await asyncio.sleep(2)
 
-            # Sanity check: verify site is up and working
+            # Sanity check: verify the site is up and returning real data
             total = await get_total_job_count(page)
             if total < MIN_TOTAL_JOBS:
                 raise RuntimeError(
@@ -148,21 +153,36 @@ async def scrape_all_jobs() -> tuple[list, bool]:
             print(f"Site OK — {total:,} total jobs. Scraping today's postings...", file=sys.stderr)
 
             page_num = 1
-            while True:
+            while page_num <= MAX_PAGES:
                 cards = page.locator(".job-card")
                 card_count = await cards.count()
 
-                # Stop if no cards have "Posted today" tag — we've moved past today's jobs
-                today_count = await page.locator("h6.job-info-tag.bold.bg-primary").count()
-                print(f"  Page {page_num}: {card_count} cards, {today_count} posted today", file=sys.stderr)
-                if today_count == 0:
-                    print("  No more 'Posted today' cards — stopping pagination", file=sys.stderr)
-                    break
-
+                # Collect all IDs on this page first (for early-stop check)
+                page_jobs = []
+                page_ids = []
                 for i in range(card_count):
                     job = await extract_job_from_card(cards.nth(i))
                     if job:
-                        jobs.append(job)
+                        page_jobs.append(job)
+                        page_ids.append(job["id"])
+
+                # Early stop: if every job on this page is already seen, we're done
+                if page_ids and all(jid in seen_ids for jid in page_ids):
+                    print(f"  Page {page_num}: all {len(page_ids)} jobs already seen — stopping", file=sys.stderr)
+                    break
+
+                # Only keep genuinely new jobs
+                new_on_page = [j for j in page_jobs if j["id"] not in seen_ids]
+                print(
+                    f"  Page {page_num}: {len(page_jobs)} cards, {len(new_on_page)} new",
+                    file=sys.stderr,
+                )
+                new_jobs.extend(new_on_page)
+
+                if page_num >= MAX_PAGES:
+                    print(f"  Reached MAX_PAGES ({MAX_PAGES}) — stopping", file=sys.stderr)
+                    is_complete = False
+                    break
 
                 # Check for enabled next-page button
                 next_btn = page.locator("[aria-label*='Next']").first
@@ -185,21 +205,18 @@ async def scrape_all_jobs() -> tuple[list, bool]:
         finally:
             await browser.close()
 
-    return jobs, is_complete
+    return new_jobs, is_complete
 
 
 def main() -> None:
     seen_ids = state_module.get_seen_ids()
 
     try:
-        all_jobs, is_complete = asyncio.run(scrape_all_jobs())
+        new_jobs, is_complete = asyncio.run(scrape_all_jobs(seen_ids))
     except RuntimeError as e:
         # Sanity check failure or hard site error
         print(f"SCRAPER_FATAL: {e}", file=sys.stderr)
         sys.exit(1)
-
-    # Deduplicate against state (post-collection, all pages gathered first)
-    new_jobs = [j for j in all_jobs if j["id"] not in seen_ids]
 
     # Write new jobs to temp file for identifier.py
     with open(JOBS_NEW_FILE, "w") as f:
@@ -208,11 +225,10 @@ def main() -> None:
     # Persist new IDs to state (even on partial scrape)
     state_module.add_jobs(new_jobs)
 
-    status = "COMPLETE" if is_complete else "PARTIAL (pagination failed)"
-    print(f"Scrape {status}: {len(new_jobs)} new jobs out of {len(all_jobs)} scraped")
+    status = "COMPLETE" if is_complete else "PARTIAL (hit page limit or pagination error)"
+    print(f"Scrape {status}: {len(new_jobs)} new jobs")
 
     if not is_complete:
-        # Signal to workflow that results may be incomplete
         print("SCRAPER_PARTIAL: results may be incomplete", file=sys.stderr)
 
 
