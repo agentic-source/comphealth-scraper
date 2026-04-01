@@ -4,6 +4,7 @@ identifier.py — Identify the most likely US healthcare facility for each job.
 Reads jobs_new.json, calls Claude API per job, writes jobs_enriched.json.
 """
 import json
+import re
 import sys
 import time
 from pathlib import Path
@@ -33,7 +34,7 @@ Compensation: {compensation}
 Details:
 {description}
 
-Respond with JSON only, no other text:
+Respond with JSON only, no markdown, no code fences, no other text:
 {{
   "facility_name": "Name of the most likely facility",
   "facility_type": "e.g. Community Hospital, Academic Medical Center, Critical Access Hospital",
@@ -41,6 +42,15 @@ Respond with JSON only, no other text:
   "reasoning": "Brief explanation of why this facility matches the posting details",
   "alternative_facility": "Second most likely facility name, or null if none"
 }}"""
+
+
+def extract_json(text: str) -> str:
+    """Strip markdown code fences if present, return raw JSON string."""
+    text = text.strip()
+    match = re.search(r"```(?:json)?\s*([\s\S]*?)```", text)
+    if match:
+        return match.group(1).strip()
+    return text
 
 
 def identify_facility(client, job: dict) -> dict:
@@ -64,7 +74,8 @@ def identify_facility(client, job: dict) -> dict:
                 max_tokens=512,
                 messages=[{"role": "user", "content": prompt}],
             )
-            text = response.content[0].text.strip()
+            raw = response.content[0].text
+            text = extract_json(raw)
             data = json.loads(text)
             if not REQUIRED_KEYS.issubset(data.keys()):
                 raise ValueError(f"Missing required keys: {REQUIRED_KEYS - data.keys()}")
